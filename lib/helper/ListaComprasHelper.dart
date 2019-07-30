@@ -38,8 +38,7 @@ class ListaComprasHelper {
    return await openDatabase(path,version: 1,onCreate: (Database db, int newerVersion) async{
 
       await db.execute(
-        "CREATE TABLE $listaComprasTable( $idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $emailColumn TEXT,"
-            "$phoneColumn TEXT, $imgColumn TEXT)");
+        "CREATE TABLE $listaComprasTable( $idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $dateColumn TEXT)");
 
 
     });
@@ -60,7 +59,7 @@ class ListaComprasHelper {
     Database dbListaCompras = await db;
 
     List<Map> maps = await dbListaCompras.query(listaComprasTable,
-        columns: [idColumn,nameColumn,phoneColumn,emailColumn,imgColumn],
+        columns: [idColumn,nameColumn,dateColumn],
     where: "$idColumn = ?",
     whereArgs: [id]);
 

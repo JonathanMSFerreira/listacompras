@@ -1,18 +1,16 @@
 final String listaComprasTable = "listaComprasTable";
 final String idColumn = "idColumn";
 final String nameColumn = "nameColumn";
-final String emailColumn = "emailColumn";
-final String phoneColumn = "phoneColumn";
-final String imgColumn = "imgColumn";
+final String dateColumn = "dateColumn";
+
 
 
 class ListaCompras {
 
   int id;
   String name;
-  String phone;
-  String email;
-  String img;
+  String date;
+
 
 
   ListaCompras();
@@ -21,18 +19,16 @@ class ListaCompras {
   ListaCompras.fromMap(Map map) {
     id = map[idColumn];
     name = map[nameColumn];
-    phone = map[phoneColumn];
-    email = map[emailColumn];
-    img = map[imgColumn];
+    date = map[dateColumn];
+
   }
 
   //Transforma os dados em um Map
   Map toMap() {
     Map<String, dynamic> map = {
       nameColumn: name,
-      phoneColumn: phone,
-      emailColumn: email,
-      imgColumn: img
+      dateColumn: date,
+
     };
 
     if (id != null) {
@@ -45,7 +41,7 @@ class ListaCompras {
   @override
   String toString() {
 
-    return "ListaCompras(id: $id, name: $name, phone: $phone, email: $email, img: $img)";
+    return "ListaCompras(id: $id, name: $name, date: $date)";
 
   }
 

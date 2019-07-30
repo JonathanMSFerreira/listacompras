@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:listacompras/model/ListaCompras.dart';
-import 'package:listacompras/ui/ListaComprasPage.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:listacompras/helper/ListaComprasHelper.dart';
 import 'dart:io';
 
@@ -50,14 +48,15 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
           onPressed: () {
 
      //       _showListaComprasPage();
-
-
             _dialogNovaListaCompras();
 
 
           },
         ),
         body:
+
+
+
         ListView.builder(
             padding: EdgeInsets.all(10.0),
             itemCount: todasListaCompras.length,
@@ -161,7 +160,14 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
                 if (_editedListaCompras.name != null &&
                     _editedListaCompras.name.isNotEmpty) {
+
+                  helper.saveListaCompras(_editedListaCompras);
                   Navigator.pop(context, _editedListaCompras);
+
+
+                    _getAllListaCompras();
+
+
                 } else {
                   FocusScope.of(context).requestFocus(_nameFocus);
                 }
@@ -186,28 +192,39 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
 
   Widget _listaComprasCard(BuildContext context, int index) {
-    return GestureDetector(
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Row(
-            children: <Widget>[
 
-              Container(
-                width: 80.0,
-                height: 80.0,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: todasListaCompras[index].img != null ?
-                        FileImage(File(todasListaCompras[index].img)) :
-                        AssetImage("images/user.png")
+    return  Card(
+        child: Column(
 
-                    )),
+          mainAxisSize: MainAxisSize.min,
+          children:  <Widget>[
+            ListTile(
+              leading: Icon(Icons.playlist_add_check),
+              title: Text(todasListaCompras[index].name ?? "", style: TextStyle( fontSize: 22.0, fontWeight: FontWeight.bold)),
+              subtitle: Text("Você tem 18 itens nessa lista"),
+            ),
 
 
+
+            ButtonTheme.bar( // make buttons use the appropriate styles for cards
+              child: ButtonBar(
+                children: <Widget>[
+                  FlatButton(
+                    child: const Text('Adicionar itens', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
+                    onPressed: () { /* ... */ },
+                  ),
+                  FlatButton(
+                    child: const Text('Remover'),
+                    onPressed: () { /* ... */ },
+                  ),
+                ],
               ),
-              Padding(
+            ),
+
+
+
+
+    /*        Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Column(
 
@@ -217,10 +234,10 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
                         style: TextStyle(
                             fontSize: 22.0, fontWeight: FontWeight.bold)),
 
-          /*          Text(todasListaCompras[index].phone ?? "",
+          *//*          Text(todasListaCompras[index].phone ?? "",
                         style: TextStyle(fontSize: 18.0)),
                     Text(todasListaCompras[index].email ?? "",
-                        style: TextStyle(fontSize: 18.0)),*/
+                        style: TextStyle(fontSize: 18.0)),*//*
 
                   ],
 
@@ -228,23 +245,19 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
                 ),
 
 
-              )
+              )*/
 
 
             ],
 
 
-          ),),
+        )
 
 
-      ),
-/*      onTap: (){
+      );
 
-        _showOptionsListaCompras(context, index);
 
-      },*/
 
-    );
   }
 
 

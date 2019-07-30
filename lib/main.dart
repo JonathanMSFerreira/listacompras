@@ -1,6 +1,5 @@
 import 'package:listacompras/ui/InitListaComprasPage.dart';
 
-import 'package:listacompras/ui/HomePage.dart';
 import 'package:flutter/material.dart';
 
 
