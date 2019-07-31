@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 
 void main() => runApp(MaterialApp(
-  title: 'Agenda de contatos',
+  title: 'Lista de Compras',
   theme: ThemeData(
     primarySwatch: Colors.red,
   ),

@@ -1,4 +1,4 @@
-import 'package:listacompras/model/ListaCompras.dart';
+import 'package:listacompras/model/Compra.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -6,18 +6,17 @@ import 'package:sqflite/sqflite.dart';
 
 
 
-class ListaComprasHelper {
+class CompraHelper {
 
-  static final ListaComprasHelper _instance = ListaComprasHelper.internal();
+  static final CompraHelper _instance = CompraHelper.internal();
 
-  factory ListaComprasHelper() => _instance;
+  factory CompraHelper() => _instance;
 
-  ListaComprasHelper.internal();
+  CompraHelper.internal();
 
   Database _db;
 
 
-  //Retorna a instancia do banco de dados
  Future<Database> get db async{
 
     if(_db != null){
@@ -33,38 +32,38 @@ class ListaComprasHelper {
   Future<Database> initDb() async{
 
     final databasesPath = await getDatabasesPath();
-    final path =  join(databasesPath,"listaCompras.db");
+    final path =  join(databasesPath,"db_compras.db");
 
-   return await openDatabase(path,version: 1,onCreate: (Database db, int newerVersion) async{
+    return await openDatabase(path,version: 1,onCreate: (Database db, int newerVersion) async{
 
       await db.execute(
-        "CREATE TABLE $listaComprasTable( $idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $dateColumn TEXT)");
+        "CREATE TABLE $compraTable( $idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $dateColumn TEXT)");
 
 
     });
   }
 
-  Future<ListaCompras> saveListaCompras(ListaCompras listaCompras) async {
+  Future<Compra> saveCompra(Compra compra) async {
 
-   Database dbListaCompras = await db;
-   listaCompras.id = await dbListaCompras.insert(listaComprasTable, listaCompras.toMap());
-  return listaCompras;
+   Database dbCompra = await db;
+   compra.id = await dbCompra.insert(compraTable, compra.toMap());
+   return compra;
 
 
   }
 
   //Retorna um contato passando o id como paramentro
-  Future<ListaCompras> getListaCompras(int id) async {
+  Future<Compra> getCompras(int id) async {
 
-    Database dbListaCompras = await db;
+    Database dbCompra = await db;
 
-    List<Map> maps = await dbListaCompras.query(listaComprasTable,
+    List<Map> maps = await dbCompra.query(compraTable,
         columns: [idColumn,nameColumn,dateColumn],
     where: "$idColumn = ?",
     whereArgs: [id]);
 
     if(maps.length > 0){
-      return ListaCompras.fromMap(maps.first);
+      return Compra.fromMap(maps.first);
     }else{
 
       return null;
@@ -74,37 +73,37 @@ class ListaComprasHelper {
 
 
   //Deleta um contact pelo id
-  Future<int> deleteListaCompras(int id) async{
+  Future<int> deleteCompra(int id) async{
 
-    Database dbListaCompras = await db;
-    return await dbListaCompras.delete(listaComprasTable, where: "$idColumn = ?",whereArgs: [id]);
-
-  }
-
-
-  //Atualiza um contact
-  Future<int> updateListaCompras(ListaCompras listaCompras) async {
-
-    Database dbListaCompras = await db;
-   return  await dbListaCompras.update(listaComprasTable, listaCompras.toMap(), where: "$idColumn = ?",whereArgs: [listaCompras.id]);
-
+    Database dbCompra = await db;
+    return await dbCompra.delete(compraTable, where: "$idColumn = ?",whereArgs: [id]);
 
   }
 
 
-  //Lista todos os contacts
-  Future<List> getAllListaCompras() async {
+  //Atualiza uma compra
+  Future<int> updateCompra(Compra compra) async {
 
-    Database dbListaCompras = await db;
-    List listMap = await dbListaCompras.rawQuery("SELECT * FROM $listaComprasTable");
-    List<ListaCompras> listListaCompras =  List();
+    Database dbCompra = await db;
+   return  await dbCompra.update(compraTable, compra.toMap(), where: "$idColumn = ?",whereArgs: [compra.id]);
+
+
+  }
+
+
+  //Lista todos as listas de compras
+  Future<List> getAllCompra() async {
+
+    Database dbCompra = await db;
+    List listMap = await dbCompra.rawQuery("SELECT * FROM $compraTable");
+    List<Compra> listCompras =  List();
     for(Map m in listMap){
 
-      listListaCompras.add(ListaCompras.fromMap(m));
+      listCompras.add(Compra.fromMap(m));
 
     }
 
-    return listListaCompras;
+    return listCompras;
 
   }
 
@@ -113,7 +112,7 @@ class ListaComprasHelper {
   Future<int> getSize() async {
 
     Database dbListaCompras = await db;
-   return  Sqflite.firstIntValue(await dbListaCompras.rawQuery("SELECT COUNT(*) FROM $listaComprasTable"));
+   return  Sqflite.firstIntValue(await dbListaCompras.rawQuery("SELECT COUNT(*) FROM $compraTable"));
 
 
   }

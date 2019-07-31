@@ -1,11 +1,11 @@
-final String listaComprasTable = "listaComprasTable";
+final String compraTable = "compraTable";
 final String idColumn = "idColumn";
 final String nameColumn = "nameColumn";
 final String dateColumn = "dateColumn";
 
 
 
-class ListaCompras {
+class Compra {
 
   int id;
   String name;
@@ -13,17 +13,18 @@ class ListaCompras {
 
 
 
-  ListaCompras();
+  Compra();
 
-  //Obtém os dados de um Map
-  ListaCompras.fromMap(Map map) {
+
+  Compra.fromMap(Map map) {
+
     id = map[idColumn];
     name = map[nameColumn];
     date = map[dateColumn];
 
   }
 
-  //Transforma os dados em um Map
+
   Map toMap() {
     Map<String, dynamic> map = {
       nameColumn: name,
@@ -41,7 +42,7 @@ class ListaCompras {
   @override
   String toString() {
 
-    return "ListaCompras(id: $id, name: $name, date: $date)";
+    return "Compra(id: $id, name: $name, date: $date)";
 
   }
 

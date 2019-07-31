@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:listacompras/model/ListaCompras.dart';
+import 'package:listacompras/model/Compra.dart';
 import 'package:listacompras/helper/ListaComprasHelper.dart';
 import 'dart:io';
 
@@ -13,10 +13,11 @@ class InitListaComprasPage extends StatefulWidget {
 
 class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
-  ListaCompras _editedListaCompras;
+  Compra _editedCompra;
 
   final _dateController = TextEditingController();
-  final _descListaComprasController = TextEditingController();
+
+  final _nameController = TextEditingController();
 
   final _nameFocus = FocusNode();
 
@@ -24,18 +25,18 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
   @override
   void initState() {
 
-    _editedListaCompras = ListaCompras();
+    _editedCompra = Compra();
 
-    _getAllListaCompras();
+    _getAllCompras();
 
     super.initState();
 
   }
 
 
-  ListaComprasHelper helper = new ListaComprasHelper();
+  CompraHelper helper = new CompraHelper();
 
-  List<ListaCompras> todasListaCompras = List();
+  List<Compra> listaCompras = List();
 
 
   @override
@@ -47,9 +48,7 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
           child: const Icon(Icons.add),
           onPressed: () {
 
-     //       _showListaComprasPage();
-            _dialogNovaListaCompras();
-
+            _dialogNovaCompra();
 
           },
         ),
@@ -59,10 +58,10 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
         ListView.builder(
             padding: EdgeInsets.all(10.0),
-            itemCount: todasListaCompras.length,
+            itemCount: listaCompras.length,
             itemBuilder: (context, index){
 
-              return _listaComprasCard(context, index);
+              return _cardCompra(context, index);
 
             })
 
@@ -118,28 +117,20 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
 
 
-  void _dialogNovaListaCompras() {
-    // flutter defined function
+
+  void _dialogRemoveCompra(int id) {
+
     showDialog(
 
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        // return object of type Dialog
+
         return AlertDialog(
-          title: new Text("Lista de Compras"),
-          content: TextField(
-            controller: _descListaComprasController,
-            focusNode: _nameFocus,
-            decoration: InputDecoration(hintText: "Descrição"),
-            onChanged: (text){
+          title: new Text("Remover"),
+          content: Text(
 
-              setState(() {
-                _editedListaCompras.name = text;
-              });
-
-            },
-
+              "Deseja remover a lista?"
 
           ),
           actions: <Widget>[
@@ -153,19 +144,94 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
             new RaisedButton(
 
+              child: new Text("Sim", style: TextStyle(color: Colors.white),),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0)),
+              onPressed: () {
+
+
+
+                  helper.deleteCompra(id);
+                  Navigator.pop(context);
+
+
+                  _getAllCompras();
+
+
+
+
+              },
+            ),
+
+
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
+
+
+
+  void _dialogNovaCompra() {
+
+
+
+    showDialog(
+
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+
+        return AlertDialog(
+          title: new Text("Lista de Compras"),
+          content: TextField(
+            controller: _nameController,
+            focusNode: _nameFocus,
+            decoration: InputDecoration(hintText: "Nome"),
+            onChanged: (text){
+
+              setState(() {
+                _editedCompra.name = text;
+
+                String data = "Criada em: " + DateTime.now().day.toString() + "/" + DateTime.now().month.toString() + "/" +DateTime.now().year.toString();
+                _editedCompra.date = data;
+
+              });
+
+            },
+
+
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Cancelar",style: TextStyle(color: Colors.grey[400]),),
+              onPressed: () {
+                _editedCompra.name = "";
+                Navigator.of(context).pop();
+              },
+            ),
+
+            new RaisedButton(
+
               child: new Text("Criar", style: TextStyle(color: Colors.white),),
              shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
 
-                if (_editedListaCompras.name != null &&
-                    _editedListaCompras.name.isNotEmpty) {
+                if (_editedCompra.name != null &&
+                    _editedCompra.name.isNotEmpty) {
 
-                  helper.saveListaCompras(_editedListaCompras);
-                  Navigator.pop(context, _editedListaCompras);
+                  helper.saveCompra(_editedCompra);
+
+                  Navigator.pop(context, _editedCompra);
 
 
-                    _getAllListaCompras();
+                    _getAllCompras();
 
 
                 } else {
@@ -182,16 +248,17 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
     );
   }
 
-  void _getAllListaCompras() {
-    helper.getAllListaCompras().then((list) {
+  void _getAllCompras() {
+
+    helper.getAllCompra().then((list) {
       setState(() {
-        todasListaCompras = list;
+        listaCompras = list;
       });
     });
   }
 
 
-  Widget _listaComprasCard(BuildContext context, int index) {
+  Widget _cardCompra(BuildContext context, int index) {
 
     return  Card(
         child: Column(
@@ -200,8 +267,8 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
           children:  <Widget>[
             ListTile(
               leading: Icon(Icons.playlist_add_check),
-              title: Text(todasListaCompras[index].name ?? "", style: TextStyle( fontSize: 22.0, fontWeight: FontWeight.bold)),
-              subtitle: Text("Você tem 18 itens nessa lista"),
+              title: Text(listaCompras[index].name ?? "", style: TextStyle( fontSize: 22.0, fontWeight: FontWeight.bold)),
+              subtitle: Text(listaCompras[index].date ?? ""),
             ),
 
 
@@ -215,7 +282,14 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
                   ),
                   FlatButton(
                     child: const Text('Remover'),
-                    onPressed: () { /* ... */ },
+                    onPressed: () {
+
+
+
+                      _dialogRemoveCompra(listaCompras[index].id);
+
+
+                    },
                   ),
                 ],
               ),
