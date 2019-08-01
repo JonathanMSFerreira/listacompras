@@ -1,3 +1,4 @@
+import 'package:listacompras/ui/HomePage.dart';
 import 'package:listacompras/ui/ListaComprasPage.dart';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,6 @@ void main() => runApp(MaterialApp(
     primarySwatch: Colors.red,
   ),
   debugShowCheckedModeBanner: false,
-  home: ListaComprasPage(),
+  home: HomePage(),
 )
 );

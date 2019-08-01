@@ -3,6 +3,8 @@ import 'package:listacompras/model/Compra.dart';
 import 'package:listacompras/helper/ListaComprasHelper.dart';
 import 'dart:io';
 
+import 'package:listacompras/ui/ItemPage.dart';
+
 
 
 class ListaComprasPage extends StatefulWidget {
@@ -26,7 +28,6 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
   @override
   void initState() {
 
-    _sizeListaCompras = 0;
 
 
     _editedCompra = Compra();
@@ -298,8 +299,14 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
               child: ButtonBar(
                 children: <Widget>[
                   FlatButton(
-                    child: const Text('Itens da lista', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
-                    onPressed: () { /* ... */ },
+                    child: const Text('Itens da lista', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
+                    onPressed: () {
+
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => ItemPage(listaCompras[index])));
+
+
+                    },
                   ),
                   FlatButton(
                     child: const Text('Remover'),

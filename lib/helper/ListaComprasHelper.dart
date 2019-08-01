@@ -1,7 +1,7 @@
 import 'package:listacompras/model/Compra.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
+import 'package:listacompras/model/Item.dart';
 
 
 
@@ -40,6 +40,10 @@ class CompraHelper {
         "CREATE TABLE $compraTable( $idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $dateColumn TEXT)");
 
 
+      await db.execute(
+          "CREATE TABLE $itemTable( $idItemColumn INTEGER PRIMARY KEY, $nameColumn TEXT,  $okColumn BOOL,  $fkCompraColumn INTEGER)");
+
+
     });
   }
 
@@ -52,7 +56,7 @@ class CompraHelper {
 
   }
 
-  //Retorna um contato passando o id como paramentro
+  //Retorna um lista passando o id como paramentro
   Future<Compra> getCompras(int id) async {
 
     Database dbCompra = await db;
@@ -126,6 +130,62 @@ class CompraHelper {
 
 
   }
+//CRUD DE ITEM DA LISTA DE COMPRAS
+
+
+  Future<Item> saveItem(Item item) async {
+
+    Database dbCompra = await db;
+    item.idItem = await dbCompra.insert(itemTable, item.toMap());
+    return item;
+
+
+  }
+
+
+
+  //Retorna um lista passando o id como paramentro
+  Future<Item> getItem(int id) async {
+
+    Database dbCompra = await db;
+
+    List<Map> maps = await dbCompra.query(itemTable,
+        columns: [idItemColumn,nameItemColumn,okColumn, fkCompraColumn],
+        where: "$idItemColumn = ?",
+        whereArgs: [id]);
+
+    if(maps.length > 0){
+      return Item.fromMap(maps.first);
+    }else{
+
+      return null;
+    }
+
+  }
+
+
+  //Deleta um contact pelo id
+  Future<int> deleteItem(int id) async{
+
+    Database dbCompra = await db;
+    return await dbCompra.delete(itemTable, where: "$idItemColumn = ?",whereArgs: [id]);
+
+  }
+
+
+
+  //Atualiza uma compra
+  Future<int> updateItem(Item item) async {
+
+    Database dbCompra = await db;
+    return  await dbCompra.update(itemTable, item.toMap(), where: "$idItemColumn = ?",whereArgs: [item.idItem]);
+
+
+  }
+
+
+
+
 
 
 
