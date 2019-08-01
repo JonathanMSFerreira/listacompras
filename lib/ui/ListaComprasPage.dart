@@ -5,29 +5,34 @@ import 'dart:io';
 
 
 
-class InitListaComprasPage extends StatefulWidget {
+class ListaComprasPage extends StatefulWidget {
+
   @override
-  _InitListaComprasPageState createState() => _InitListaComprasPageState();
+  _ListaComprasPageState createState() => _ListaComprasPageState();
 
 }
 
-class _InitListaComprasPageState extends State<InitListaComprasPage> {
+class _ListaComprasPageState extends State<ListaComprasPage> {
 
   Compra _editedCompra;
 
-  final _dateController = TextEditingController();
 
   final _nameController = TextEditingController();
 
   final _nameFocus = FocusNode();
 
+  var _sizeListaCompras;
 
   @override
   void initState() {
 
+    _sizeListaCompras = 0;
+
+
     _editedCompra = Compra();
 
     _getAllCompras();
+
 
     super.initState();
 
@@ -48,13 +53,14 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
           child: const Icon(Icons.add),
           onPressed: () {
 
-            _dialogNovaCompra();
+            _dialogNovaCompra(context);
 
           },
         ),
         body:
 
 
+        _sizeListaCompras.toString() != '0' ?
 
         ListView.builder(
             padding: EdgeInsets.all(10.0),
@@ -65,23 +71,24 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
             })
 
-/*
-        Center(
+          :
+
+         Center(
 
           child: Column(
-            
+
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
 
               Image.asset("images/bck_carrinho.png",  color: Color.fromRGBO(255, 255, 255, 0.5),
                   colorBlendMode: BlendMode.modulate),
               Text("Nenhuma lista criada!",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 20.0), )
-              
+
             ],
 
           ),
 
-        )*/,
+        ),
 
 
         bottomNavigationBar: BottomAppBar(
@@ -120,6 +127,7 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
   void _dialogRemoveCompra(int id) {
 
+
     showDialog(
 
       context: context,
@@ -155,6 +163,7 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
                   Navigator.pop(context);
 
 
+                  _getSize();
                   _getAllCompras();
 
 
@@ -176,7 +185,7 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
 
 
-  void _dialogNovaCompra() {
+  void _dialogNovaCompra(BuildContext context) {
 
 
 
@@ -196,8 +205,7 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
               setState(() {
                 _editedCompra.name = text;
-
-                String data = "Criada em: " + DateTime.now().day.toString() + "/" + DateTime.now().month.toString() + "/" +DateTime.now().year.toString();
+                 String data = "Criada em: " + DateTime.now().day.toString() + "/" + DateTime.now().month.toString() + "/" +DateTime.now().year.toString();
                 _editedCompra.date = data;
 
               });
@@ -223,15 +231,15 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
               borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
 
-                if (_editedCompra.name != null &&
-                    _editedCompra.name.isNotEmpty) {
+                if (_editedCompra.name != null &&  _editedCompra.name.isNotEmpty) {
 
                   helper.saveCompra(_editedCompra);
 
                   Navigator.pop(context, _editedCompra);
-
-
-                    _getAllCompras();
+                  _editedCompra = Compra();
+                  _nameController.text = "";
+                  _getSize();
+                  _getAllCompras();
 
 
                 } else {
@@ -257,6 +265,19 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
     });
   }
 
+  void _getSize(){
+
+
+    helper.getSize().then((size) {
+      setState(() {
+        _sizeListaCompras =  size.toString();
+      });
+    });
+
+
+  }
+
+
 
   Widget _cardCompra(BuildContext context, int index) {
 
@@ -277,7 +298,7 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
               child: ButtonBar(
                 children: <Widget>[
                   FlatButton(
-                    child: const Text('Adicionar itens', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
+                    child: const Text('Itens da lista', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
                     onPressed: () { /* ... */ },
                   ),
                   FlatButton(
@@ -298,30 +319,6 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
 
 
-    /*        Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Column(
-
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(todasListaCompras[index].name ?? "",
-                        style: TextStyle(
-                            fontSize: 22.0, fontWeight: FontWeight.bold)),
-
-          *//*          Text(todasListaCompras[index].phone ?? "",
-                        style: TextStyle(fontSize: 18.0)),
-                    Text(todasListaCompras[index].email ?? "",
-                        style: TextStyle(fontSize: 18.0)),*//*
-
-                  ],
-
-
-                ),
-
-
-              )*/
-
-
             ],
 
 
@@ -330,10 +327,6 @@ class _InitListaComprasPageState extends State<InitListaComprasPage> {
 
       );
 
-
-
   }
-
-
 
 }
