@@ -66,7 +66,7 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
         _sizeListaCompras.toString() != '0' ?
 
         ListView.builder(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(1.0),
             itemCount: listaCompras.length,
             itemBuilder: (context, index){
 
@@ -300,18 +300,9 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
             ButtonTheme.bar( // make buttons use the appropriate styles for cards
               child: ButtonBar(
                 children: <Widget>[
+
                   FlatButton(
-                    child: const Text('Itens da lista', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
-                    onPressed: () {
-
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => ItemPage(listaCompras[index])));
-
-
-                    },
-                  ),
-                  FlatButton(
-                    child: const Text('Remover'),
+                    child: const Text('Remover', style: TextStyle(color: Colors.black12),),
                     onPressed: () {
 
 
@@ -321,6 +312,17 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
 
                     },
                   ),
+                  FlatButton(
+                    child: const Text('Itens da lista', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+                    onPressed: () {
+
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => ItemPage(listaCompras[index])));
+
+
+                    },
+                  ),
+
                 ],
               ),
             ),

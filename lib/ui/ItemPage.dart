@@ -63,7 +63,7 @@ class _ItemPageState extends State<ItemPage> {
         children: <Widget>[
           Expanded(
               child: ListView.builder(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(1.0),
                   itemCount: listaItens.length,
                   itemBuilder: (context, index) {
                     return _cardItem(context, index);
@@ -71,9 +71,12 @@ class _ItemPageState extends State<ItemPage> {
           Row(
             children: <Widget>[
               Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.fromLTRB(5.0, 5.0, 1.0, 5.0),
-                      child: TextField(
+                  child: Container(
+                    
+                    padding: EdgeInsets.only(left: 2.0, bottom: 2.0, right: 0.0),
+                      child:
+                          
+                      TextField(
                           controller: _nameController,
                           decoration: new InputDecoration(
                             labelText: "Novo item",
@@ -89,7 +92,14 @@ class _ItemPageState extends State<ItemPage> {
                               _editedItem.nameItem = text;
                               _editedItem.fkCompra = compra.id;
                             });
-                          }))),
+                          })
+
+
+
+
+
+
+                  )),
               Container(
                 alignment: Alignment.center,
                 child: IconButton(
@@ -106,6 +116,11 @@ class _ItemPageState extends State<ItemPage> {
                         _editedItem = Item();
                         _nameController.text = "";
                         _getAllItens(compra.id);
+
+                        FocusScope.of(context).requestFocus(new FocusNode());
+
+
+
                       } else {
                         FocusScope.of(context).requestFocus(_nameFocus);
                       }
@@ -127,14 +142,20 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Widget _cardItem(BuildContext context, int index) {
+
+    String cont = (index + 1).toString() + ".";
+
     return Card(
         child: Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ListTile(
-          leading: Icon(Icons.playlist_add_check),
+          leading: Text(cont, style: TextStyle(fontSize: 20.0),),
           title: Text(listaItens[index].nameItem ?? "",
-              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+
+
+
         ),
       ],
     ));

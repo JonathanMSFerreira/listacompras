@@ -47,6 +47,7 @@ flutter:
   assets:
     - images/user.png
     - images/bck_carrinho.png
+    - images/bck_cesta.ico
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
