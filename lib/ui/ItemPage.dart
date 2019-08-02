@@ -15,6 +15,7 @@ class ItemPage extends StatefulWidget {
 }
 
 class _ItemPageState extends State<ItemPage> {
+
   Compra compra;
 
   Item _editedItem;
@@ -31,7 +32,7 @@ class _ItemPageState extends State<ItemPage> {
   void initState() {
     _editedItem = Item();
 
-    _editedItem.ok = 0;
+    _editedItem.ok = false;
     _getAllItens(compra.id);
 
     super.initState();
@@ -72,11 +73,9 @@ class _ItemPageState extends State<ItemPage> {
             children: <Widget>[
               Expanded(
                   child: Container(
-                    
-                    padding: EdgeInsets.only(left: 2.0, bottom: 2.0, right: 0.0),
-                      child:
-                          
-                      TextField(
+                      padding:
+                          EdgeInsets.only(left: 2.0, bottom: 2.0, right: 0.0),
+                      child: TextField(
                           controller: _nameController,
                           decoration: new InputDecoration(
                             labelText: "Novo item",
@@ -92,14 +91,7 @@ class _ItemPageState extends State<ItemPage> {
                               _editedItem.nameItem = text;
                               _editedItem.fkCompra = compra.id;
                             });
-                          })
-
-
-
-
-
-
-                  )),
+                          }))),
               Container(
                 alignment: Alignment.center,
                 child: IconButton(
@@ -111,16 +103,17 @@ class _ItemPageState extends State<ItemPage> {
                     onPressed: () {
                       if (_editedItem.nameItem != null &&
                           _editedItem.nameItem.isNotEmpty) {
-                        helper.saveItem(_editedItem);
 
+
+                        helper.saveItem(_editedItem);
                         _editedItem = Item();
+                        _editedItem.ok = false;
                         _nameController.text = "";
                         _getAllItens(compra.id);
 
+
+
                         FocusScope.of(context).requestFocus(new FocusNode());
-
-
-
                       } else {
                         FocusScope.of(context).requestFocus(_nameFocus);
                       }
@@ -142,22 +135,45 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Widget _cardItem(BuildContext context, int index) {
-
     String cont = (index + 1).toString() + ".";
 
-    return Card(
-        child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        ListTile(
-          leading: Text(cont, style: TextStyle(fontSize: 20.0),),
+    return Dismissible(
+        key: Key(listaItens[index].idItem.toString()),
+        background: Container(
+          color: Colors.red,
+          child: Align(
+            alignment: Alignment(-0.9, 0.0),
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        direction: DismissDirection.startToEnd,
+        child: CheckboxListTile(
           title: Text(listaItens[index].nameItem ?? "",
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-
+          value: listaItens[index].ok,
+          secondary: Text(
+            cont,
+            style: TextStyle(fontSize: 20.0),
+          ),
+          onChanged: (c) {
+            setState(() {
+              listaItens[index].ok = c;
+            });
+          },
 
 
         ),
-      ],
-    ));
+
+      onDismissed: (direction){
+
+        helper.deleteItem(listaItens[index].idItem);
+        _getAllItens(compra.id);
+
+    },
+
+    );
   }
 }

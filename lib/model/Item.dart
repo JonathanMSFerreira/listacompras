@@ -10,7 +10,7 @@ class Item {
 
   int idItem;
   String nameItem;
-  int ok ;
+  bool ok ;
   int fkCompra;
 
 
@@ -21,7 +21,7 @@ class Item {
 
     idItem = map[idItemColumn];
     nameItem = map[nameItemColumn];
-    ok = map[okColumn];
+    ok = map[okColumn] == 0;
     fkCompra = map[fkCompraColumn];
 
   }
@@ -32,7 +32,7 @@ class Item {
       Map<String, dynamic> map = {
 
       nameItemColumn: nameItem,
-      okColumn: ok,
+      okColumn: ok == true  ? 1 : 0,
       fkCompraColumn: fkCompra,
 
     };
