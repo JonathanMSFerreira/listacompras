@@ -34,6 +34,8 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
 
     _getAllCompras();
 
+    _getSize();
+
 
     super.initState();
 

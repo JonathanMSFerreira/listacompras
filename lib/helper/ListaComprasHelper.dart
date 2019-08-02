@@ -32,7 +32,7 @@ class CompraHelper {
   Future<Database> initDb() async{
 
     final databasesPath = await getDatabasesPath();
-    final path =  join(databasesPath,"db_compras.db");
+    final path =  join(databasesPath,"db_list.db");
 
     return await openDatabase(path,version: 1,onCreate: (Database db, int newerVersion) async{
 
@@ -40,8 +40,10 @@ class CompraHelper {
         "CREATE TABLE $compraTable( $idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $dateColumn TEXT)");
 
 
+
       await db.execute(
-          "CREATE TABLE $itemTable( $idItemColumn INTEGER PRIMARY KEY, $nameColumn TEXT,  $okColumn BOOL,  $fkCompraColumn INTEGER)");
+          "CREATE TABLE $itemTable( $idItemColumn INTEGER PRIMARY KEY, $nameItemColumn TEXT,  $okColumn INTEGER,  $fkCompraColumn INTEGER)");
+
 
 
     });
@@ -135,8 +137,12 @@ class CompraHelper {
 
   Future<Item> saveItem(Item item) async {
 
-    Database dbCompra = await db;
-    item.idItem = await dbCompra.insert(itemTable, item.toMap());
+
+    item.toString();
+
+
+    Database dbItem = await db;
+    item.idItem = await dbItem.insert(itemTable, item.toMap());
     return item;
 
 
@@ -162,6 +168,24 @@ class CompraHelper {
     }
 
   }
+
+
+//Lista todos as listas de compras
+  Future<List> getAllItens(int fk) async {
+
+    Database dbCompra = await db;
+    List listMap = await dbCompra.rawQuery("SELECT * FROM $itemTable WHERE $fkCompraColumn = $fk" );
+    List<Item> listItens =  List();
+    for(Map m in listMap){
+
+      listItens.add(Item.fromMap(m));
+
+    }
+
+    return listItens;
+
+  }
+
 
 
   //Deleta um contact pelo id

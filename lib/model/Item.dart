@@ -9,8 +9,8 @@ final String fkCompraColumn = "fkCompraColumn";
 class Item {
 
   int idItem;
-  String name;
-  bool ok ;
+  String nameItem;
+  int ok ;
   int fkCompra;
 
 
@@ -20,11 +20,9 @@ class Item {
   Item.fromMap(Map map) {
 
     idItem = map[idItemColumn];
-    name = map[nameItemColumn];
+    nameItem = map[nameItemColumn];
     ok = map[okColumn];
     fkCompra = map[fkCompraColumn];
-
-
 
   }
 
@@ -33,7 +31,7 @@ class Item {
 
       Map<String, dynamic> map = {
 
-      nameItemColumn: name,
+      nameItemColumn: nameItem,
       okColumn: ok,
       fkCompraColumn: fkCompra,
 
@@ -49,7 +47,7 @@ class Item {
   @override
   String toString() {
 
-    return "Item(idItem: $idItem, name: $name, ok: $ok, fkCompra: $fkCompra)";
+    return "Item(idItem: $idItem, name: $nameItem, ok: $ok, fkCompra: $fkCompra)";
 
   }
 
